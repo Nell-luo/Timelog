@@ -17,6 +17,45 @@
 .tab-btn>span{display:inline-flex!important;flex:0 0 auto!important;margin:0!important;padding:0!important;flex-direction:row!important;align-items:center!important;line-height:1!important;font-size:14px!important;}
 .tab-btn>span+span{margin-left:1px!important;font-size:12px!important;line-height:1!important;white-space:nowrap!important;flex:0 1 auto!important;overflow:hidden!important;text-overflow:ellipsis!important;}
 
+/* ===== [iOS适配] 底部导航栏：滑动不误触 ===== */
+/* 外层只负责定位，整块不接收触摸；滑动手势交给页面滚动 */
+#tabBarRoot{pointer-events:none!important;touch-action:pan-y!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;background:none!important;}
+#tabBarFade{pointer-events:none!important;}
+/* 真正可点的只有白色胶囊条本身 */
+#tabBarInner{pointer-events:auto!important;touch-action:pan-y!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;}
+/* pan-y = 竖向滑动一律当作滚动页面处理，不生成点击 */
+.tab-btn{touch-action:pan-y!important;-webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important;}
+#tabBarInner .tab-btn{min-height:42px!important;padding:5px 4px!important;}
+/* 页面底部留白：按导航条实际高度让位，避免内容被压住 */
+#record.tab-content,#history.tab-content{padding-bottom:calc(env(safe-area-inset-bottom) + 80px)!important;}
+
+/* ===== [计划页] 训练头部：不再弹窗 + 计划/实际按钮上移 ===== */
+#gapTrainHeader{cursor:default!important;}
+#gapTrainHeader .gt-hdr-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;flex-shrink:0;padding:5px 8px;border-radius:10px;font-size:12px;line-height:1.1;background:rgba(255,255,255,0.72);box-shadow:0 1px 3px rgba(0,0,0,0.07),inset 0 0 0 1px rgba(54,184,164,0.22);color:#1f2937!important;pointer-events:auto;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(54,184,164,0.1);position:relative;z-index:60;transition:all .18s;}
+#gapTrainHeader .gt-hdr-btn:active{transform:scale(0.95);background:rgba(54,184,164,0.16);}
+#gapTrainHeader .gt-title-short{display:none;}
+#gapTrainHeader .gt-title{font-size:12.5px;font-weight:600;color:#1d8a7e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#gapTrainHeader #gapTrainSummary{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px!important;padding:2px 6px!important;}
+/* 窄屏（≤360px，如 iPhone SE 首代）微调，保证头部三件套不挤压 */
+@media (max-width:400px){
+  #gapTrainHeader{gap:5px!important;}
+}
+@media (max-width:360px){
+  #gapTrainHeader .gt-hdr-btn{padding:5px 6px!important;gap:2px!important;}
+  #gapTrainHeader .gt-title{font-size:12px!important;}
+  #gapTrainHeader .gt-title-full{display:none!important;}
+  #gapTrainHeader .gt-title-short{display:inline!important;}
+  #gapTrainHeader #gapTrainSummary{max-width:86px!important;font-size:10px!important;padding:2px 6px!important;}
+}
+/* 训练头部整体高度收紧，把空间让给垂直时间轴 */
+#gapTLCard{padding:10px!important;}
+#gapTrainHeader{margin:-10px -10px 6px -10px!important;padding:8px 9px!important;}
+#gapDateRow{margin-bottom:6px!important;}
+
+/* ===== [管理页] 从记录页迁移过来的快捷入口卡片 ===== */
+#manageEntryCard .entry-btn{display:flex;align-items:center;justify-content:center;gap:6px;flex:1 1 0%;min-width:0;padding:11px 10px;border-radius:14px;font-size:13px;font-weight:500;letter-spacing:0.2px;background:#f7f3ea;color:#1f2937;border:none;box-shadow:0 1px 2px rgba(0,0,0,0.08),inset 0 0 0 1px rgba(0,0,0,0.05);-webkit-tap-highlight-color:rgba(0,0,0,0.06);cursor:pointer;touch-action:manipulation;transition:all .18s;}
+#manageEntryCard .entry-btn:active{transform:scale(0.97);opacity:.85;}
+
 *{-webkit-tap-highlight-color:transparent;}
 body{background:linear-gradient(180deg,#f8fdfb 0%,#e7f8f3 60%,#e7f8f3 100%);margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
 .glass-card{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.6);}
@@ -143,7 +182,7 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </div>
 </div>
 
-<div class="px-4 py-4" style="padding-bottom:68px;">
+<div id="pageWrap" class="px-4 py-4" style="padding-bottom:68px;">
 <div id="record" class="tab-content active" style="display:block !important;padding-bottom:calc(88px + env(safe-area-inset-bottom));">
 <div class="glass-card rounded-2xl shadow-lg mb-4" style="overflow:hidden;">
 <div id="dailyQuoteEl" class="quote-bar cursor-pointer select-none transition-all" onclick="window._toggleQuotePanel&amp;&amp;window._toggleQuotePanel();return false;" style="display:block;padding:12px 48px;margin:0;background:linear-gradient(90deg,rgba(54,184,164,0.10),rgba(54,184,164,0.20),rgba(54,184,164,0.10));border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.6;letter-spacing:0.5px;text-shadow:none;box-shadow:0 2px 12px rgba(54,184,164,0.15);position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;text-align:center;"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(29,138,126,0.45);font-size:20px;font-weight:bold;line-height:1;text-shadow:none;">❝</span><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(29,138,126,0.45);font-size:20px;font-weight:bold;line-height:1;text-shadow:none;">❞</span><span id="dailyQuoteText" class="italic" style="display:inline-block;max-width:calc(100% - 56px);white-space:normal;line-height:1.4;text-align:center;word-break:break-word;padding:0 4px;"></span></div>
@@ -158,11 +197,8 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </div>
 <!-- 开始记录 + 补录/管理按钮 + 时间线 合并为一个卡片 -->
 <div class="glass-card rounded-2xl p-4 shadow-lg mb-4">
-<div id="categoriesGrid" class="grid grid-cols-4 gap-2 mb-5"></div>
-<div class="flex items-center gap-2 mb-5">
-<button id="backfillBtn" type="button" onclick="if(typeof openBackfill==='function')openBackfill();" class="flex-1 py-2 font-medium rounded-xl transition-all cursor-pointer" style="font-size:12px;letter-spacing:0.2px;padding-left:16px;padding-right:16px;min-width:0;background:#f7f3ea!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;color:#1f2937!important;box-shadow:0 1px 2px rgba(0,0,0,0.08),inset 0 0 0 1px rgba(0,0,0,0.05);-webkit-tap-highlight-color:rgba(0,0,0,0.06);border:none!important;pointer-events:auto;position:relative;z-index:5;">📝 补录过去时间</button>
-<button id="manageCategoriesBtn" type="button" onclick="if(typeof renderCatList==='function'){renderCatList();}if(typeof showModal==='function')showModal('categoryModal');" class="flex-shrink-0 py-2 font-medium rounded-xl transition-all cursor-pointer" style="font-size:12px;letter-spacing:0.2px;padding-left:16px;padding-right:16px;background:#f7f3ea!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;color:#1f2937!important;box-shadow:0 1px 2px rgba(0,0,0,0.08),inset 0 0 0 1px rgba(0,0,0,0.05);-webkit-tap-highlight-color:rgba(0,0,0,0.06);border:none!important;pointer-events:auto;position:relative;z-index:5;">⚙️ 管理</button>
-</div>
+<div id="categoriesGrid" class="grid grid-cols-4 gap-2 mb-3"></div>
+<!-- [调整] 「📝 补录过去时间」「⚙️ 管理」已移至「管理」页的「⚡ 快捷操作」卡片 -->
 <div id="timelineWrapper" style="width:100%;overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;touch-action:pan-x;scrollbar-width:thin;border-radius:16px;margin-bottom:6px;">
 <div class="timeline-container" id="timelineContainer"></div>
 </div>
@@ -183,8 +219,8 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 <div class="grid grid-cols-2 gap-2 mb-3">
 <label id="importJsonBtn" class="flex items-center justify-center py-2.5 bg-blue-50 text-blue-600 rounded-xl font-medium cursor-pointer" style="font-size:12px;"><span style="font-size:12px;">📥</span> 导入JSON<input id="jsonImportFile" type="file" accept=".json" class="hidden"></label>
 <button id="exportJsonBtn" type="button" class="py-2.5 bg-orange-50 text-orange-600 rounded-xl font-medium" style="font-size:12px;"><span style="font-size:12px;">📤</span> 导出JSON</button>
-<label class="flex items-center justify-center py-2.5 bg-indigo-50 text-indigo-600 rounded-xl font-medium cursor-pointer" style="font-size:12px;"><span style="font-size:12px;">📥</span> 导入Excel<input id="dataImportFile" type="file" accept=".xlsx,.xls" class="hidden"></label>
-<button id="dataExportBtn" type="button" class="py-2.5 bg-green-50 text-green-600 rounded-xl font-medium" style="font-size:12px;"><span style="font-size:12px;">📊</span> 导出Excel</button>
+<label class="flex items-center justify-center py-2.5 bg-blue-50 text-blue-600 rounded-xl font-medium cursor-pointer" style="font-size:12px;"><span style="font-size:12px;">📥</span> 导入Excel<input id="dataImportFile" type="file" accept=".xlsx,.xls" class="hidden"></label>
+<button id="dataExportBtn" type="button" class="py-2.5 bg-orange-50 text-orange-600 rounded-xl font-medium" style="font-size:12px;"><span style="font-size:12px;">📤</span> 导出Excel</button>
 </div>
 <p class="text-xs text-gray-400 text-center">💡 JSON全量备份/还原；Excel 3个Sheet（记录/计划/待办），含备注列，导入自动去重</p>
 </div>
@@ -192,23 +228,23 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </div>
 
 <div id="gap" class="tab-content flex flex-col gap-0" style="display:none;padding-bottom:0;">
-<div class="glass-card rounded-2xl p-3 shadow-lg flex flex-col" style="height:calc(100dvh - 200px - env(safe-area-inset-bottom));min-height:300px;max-height:calc(100dvh - 180px - env(safe-area-inset-bottom));overflow:hidden;">
+<div id="gapTLCard" class="glass-card rounded-2xl p-3 shadow-lg flex flex-col" style="height:calc(100dvh - var(--gap-barh,70px) - 30px);min-height:0;max-height:none;overflow:hidden;">
 <!-- 页眉：时间感知力训练入口（参照记录页每日一句紫色渐变页眉效果，不斜体不加引号） -->
-<div id="gapTrainHeader" class="flex items-center justify-center cursor-pointer transition select-none flex-shrink-0" style="display:block;padding:12px 16px;margin:-12px -12px 8px -12px;background:linear-gradient(90deg,rgba(54,184,164,0.10),rgba(54,184,164,0.20),rgba(54,184,164,0.10));border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.5;letter-spacing:0.3px;text-shadow:none;box-shadow:0 2px 12px rgba(54,184,164,0.15);position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none;pointer-events:auto!important;z-index:50;" onclick="(function(){if(window.showModal){window.showModal('gapTrainModal');}else{var m=document.getElementById('gapTrainModal');if(m){m.classList.remove('hidden');m.style.display='flex';document.body.style.overflow='hidden';}}})();return false;">
-    <span style="display:flex;align-items:center;justify-content:center;gap:10px;">
-      <span style="font-style:normal;font-size:14px;font-weight:600;color:#1d8a7e;">时间感知力训练</span>
-      <span id="gapTrainSummary" class="px-2 py-0.5 rounded-full" style="background:rgba(54,184,164,0.18);color:#1d8a7e;font-weight:500;font-size:12px;">近7天</span>
-    </span>
+<div id="gapTrainHeader" class="flex items-center justify-between transition select-none flex-shrink-0" style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;padding:8px 9px;margin:-10px -10px 6px -10px;background:linear-gradient(90deg,rgba(54,184,164,0.10),rgba(54,184,164,0.20),rgba(54,184,164,0.10));border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.5;letter-spacing:0.3px;text-shadow:none;box-shadow:0 2px 12px rgba(54,184,164,0.15);position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:pan-y;-webkit-user-select:none;user-select:none;pointer-events:auto!important;z-index:50;">
+<button type="button" id="gapAddPlanTitleBtn" class="gt-hdr-btn" onclick="window._openAddPlan&amp;&amp;window._openAddPlan();return false;">📋 计划</button>
+<span class="gt-center" style="display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;flex:1 1 auto;overflow:hidden;">
+<span class="gt-title gt-title-full">时间感知力训练</span><span class="gt-title gt-title-short">感知力训练</span>
+<span id="gapTrainSummary" class="px-2 py-0.5 rounded-full" style="background:rgba(54,184,164,0.18);color:#1d8a7e;font-weight:500;">近7天</span>
+</span>
+<button type="button" id="gapActualTitleBtn" class="gt-hdr-btn" onclick="window._openBackfill&amp;&amp;window._openBackfill();return false;">📋 实际</button>
 </div>
 <!-- 日期+计划/实际操作行 -->
-<div class="flex items-center justify-between gap-1 mb-2 flex-shrink-0 px-1">
-<button type="button" id="gapAddPlanTitleBtn" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 active:bg-primary/20 transition-colors flex-shrink-0" onclick="window._openAddPlan&amp;&amp;window._openAddPlan();return false;" style="color:#1f2937!important;font-size:12px;-webkit-tap-highlight-color:rgba(54,184,164,0.1);cursor:pointer;pointer-events:auto;z-index:50;position:relative;touch-action:manipulation;">📋 计划</button>
+<div id="gapDateRow" class="flex items-center justify-center gap-1 mb-2 flex-shrink-0 px-1">
 <button id="gapDatePrev" type="button" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 flex-shrink-0" style="cursor:pointer;pointer-events:auto;z-index:50;position:relative;touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,0.05);">‹</button>
 <button id="gapDateBtn" type="button" class="flex items-center gap-1 bg-transparent hover:bg-gray-50 active:bg-gray-100 rounded-lg px-2 py-1 transition-colors select-none font-medium flex-1 justify-center" onclick="window._gapPickDate&amp;&amp;window._gapPickDate();return false;" style="color:#1f2937!important;font-size:12px;font-weight:400;min-height:32px;-webkit-tap-highlight-color:rgba(0,0,0,0.05);touch-action:manipulation;cursor:pointer;position:relative;z-index:50;pointer-events:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                 <span id="gapDateLabel"></span>
               </button>
 <button id="gapDateNext" type="button" class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 flex-shrink-0" style="cursor:pointer;pointer-events:auto;z-index:50;position:relative;touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,0.05);">›</button>
-<button type="button" id="gapActualTitleBtn" class="text-xs font-medium px-3 py-1.5 rounded-lg bg-primary/10 active:bg-primary/20 transition-colors flex-shrink-0" onclick="window._openBackfill&amp;&amp;window._openBackfill();return false;" style="color:#1f2937!important;font-size:12px;font-weight:500;-webkit-tap-highlight-color:rgba(54,184,164,0.1);cursor:pointer;pointer-events:auto;z-index:50;position:relative;touch-action:manipulation;">📋 实际</button>
 </div>
 <div class="gap-timeline-wrapper rounded-xl border border-gray-200 bg-white" id="gapTimelineWrapper" style="flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;position:relative;">
 <div class="gap-timeline-container" id="gapTimelineContainer" style="position:relative;width:100%;">
@@ -287,6 +323,15 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 <div id="historyList"></div>
 </div>
 
+<div id="manageEntryCard" class="glass-card rounded-2xl p-4 shadow-lg mb-4">
+<div class="flex items-center gap-2 mb-3"><span>⚡</span><span class="font-bold text-gray-700">快捷操作</span></div>
+<div class="flex items-center gap-2">
+<button id="backfillBtn" type="button" class="entry-btn" onclick="if(typeof openBackfill==='function')openBackfill();">📝 补录过去时间</button>
+<button id="manageCategoriesBtn" type="button" class="entry-btn" onclick="if(typeof renderCatList==='function'){renderCatList();}if(typeof showModal==='function')showModal('categoryModal');">⚙️ 管理</button>
+</div>
+<p class="text-[11px] text-gray-400 mt-2.5 leading-relaxed">补录：手动录入过去任意时间段；管理：分类的增删改与排序。</p>
+</div>
+
 <div class="glass-card rounded-2xl p-4 shadow-lg mb-4">
 <div class="flex items-center gap-2 mb-3">
 <span>📖</span><span class="font-bold text-gray-700">使用指南</span>
@@ -300,8 +345,8 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </summary>
 <div class="py-2 px-3 text-xs text-gray-500 space-y-1.5 leading-relaxed">
 <div>· <b>分类按钮</b>：点击开始/结束计时器，长时间按住可进入分类编辑</div>
-<div>· <b>补录过去时间</b>：手动补录任意时间段的时间记录；注意：柳比歇夫强调"事后回忆误差大，优先现场记录"</div>
-<div>· <b>管理</b>：进入分类管理，可增删改分类、调整排序、设置每日目标小时数</div>
+<div>· <b>补录过去时间</b>：入口已移至「管理」页顶部「⚡ 快捷操作」卡片，可手动补录任意时间段的时间记录；注意：柳比歇夫强调"事后回忆误差大，优先现场记录"</div>
+<div>· <b>管理</b>：入口与「补录过去时间」同在「管理」页顶部「⚡ 快捷操作」卡片，可增删改分类、调整排序、设置每日目标小时数</div>
 <div>· <b>今日时间线</b>：横向滑动查看全天时间块；从6点开始显示，向左滑动可查看0-5点；长空档(≥30分钟)会出现橙色提醒横幅，可一键补录/标记作息/忽略</div>
 <div>· <b>每日金句</b>：点击顶部紫色每日一句页眉，可展开/收起今日待办清单（折叠状态自动记忆）</div>
 <div>· <b>今日待办</b>：在输入框快速添加待办，勾选标记完成，点×删除</div>
@@ -319,7 +364,7 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 <div>· <b>📋实际</b>：点击右侧标题弹出补录对话框，可快速补录实际记录</div>
 <div>· <b>时间轴</b>：左列蓝色条显示计划，右列绿色条显示实际记录，中间为时间刻度（可双指缩放高度）</div>
 <div>· <b>切换日期</b>：通过 ‹ / › 左右箭头切换查看其他日期的计划与实际对比，点📅弹出日历选择任意日期</div>
-<div>· <b>时间感知力训练</b>：点「感知力训练」按钮查看近7天分类误差、准确率、训练建议，底部「朕知道了 💪」关闭</div>
+<div>· <b>时间感知力训练</b>：计划页顶部卡片头部直接显示近7天分类误差、准确率、训练建议，头部左侧「📋 计划」新增计划、右侧「📋 实际」补录实际</div>
 </div>
 </details>
 
@@ -678,8 +723,9 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </div>
 </div>
 
-<div class="fixed bottom-0 left-0 right-0 px-4" style="z-index:99999;pointer-events:auto;touch-action:manipulation;background:linear-gradient(to top,rgba(255,255,255,0.98) 0%,rgba(255,255,255,0.9) 70%,rgba(255,255,255,0) 100%);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding-bottom:calc(env(safe-area-inset-bottom) + 8px);padding-top:8px;">
-<div class="rounded-2xl p-1.5 shadow-lg flex gap-1" style="position:relative;z-index:100000;pointer-events:auto;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border:1px solid rgba(54,184,164,0.18);margin-top:4px;">
+<div id="tabBarRoot" class="fixed bottom-0 left-0 right-0 px-3" style="z-index:99999;pointer-events:none;touch-action:pan-y;background:none;padding-top:30px;padding-bottom:calc(env(safe-area-inset-bottom) + 10px);">
+<div id="tabBarFade" style="position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;background:linear-gradient(to top,rgba(255,255,255,0.90) 0%,rgba(255,255,255,0.5) 60%,rgba(255,255,255,0) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:26px 26px 0 0;"></div>
+<div id="tabBarInner" class="rounded-2xl shadow-lg flex gap-1" style="position:relative;z-index:100000;pointer-events:auto;touch-action:pan-y;background:rgba(255,255,255,0.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(54,184,164,0.18);padding:5px 7px;">
 <button type="button" class="tab-btn flex-1 py-2.5 px-2 rounded-xl text-indigo-600 font-bold text-sm flex items-center justify-center gap-1.5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]" data-tab="record" onclick="window._switchTab&amp;&amp;window._switchTab('record')" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;color:#36b8a4;font-weight:700;background:transparent;box-shadow:none;position:relative;will-change:transform;"><span class="text-base leading-none">📝</span><span class="text-[13px] leading-none" style="color:#36b8a4;">记录</span></button>
 <button type="button" class="tab-btn flex-1 py-2.5 px-2 rounded-xl text-gray-500 font-medium text-sm flex items-center justify-center gap-1.5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]" data-tab="gap" onclick="window._switchTab&amp;&amp;window._switchTab('gap')" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;background:transparent;box-shadow:none;position:relative;will-change:transform;"><span class="text-base leading-none">📋</span><span class="text-[13px] leading-none text-gray-500">计划</span></button>
 <button type="button" class="tab-btn flex-1 py-2.5 px-2 rounded-xl text-gray-500 font-medium text-sm flex items-center justify-center gap-1.5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]" data-tab="stats" onclick="window._switchTab&amp;&amp;window._switchTab('stats')" style="display:none !important;flex-direction:row;align-items:center;justify-content:center;gap:6px;background:transparent;box-shadow:none;position:relative;will-change:transform;"><span class="text-base leading-none">📊</span><span class="text-[13px] leading-none text-gray-500">分析</span></button>
@@ -5372,13 +5418,13 @@ function init(){
   $$('.tab-btn').forEach(function(b){
     var handler=function(e){e.preventDefault();e.stopPropagation();switchTab(b.dataset.tab);};
     b.onclick=handler;
-    b.addEventListener('touchstart',handler,{passive:false});
+    /* [iOS适配] 不再在 touchstart 里切页，改为纯 click，避免上滑误触 */
     b.style.cursor='pointer';b.style.pointerEvents='auto';b.style.position='relative';b.style.zIndex='10001';
     b.removeAttribute('disabled');
   });
   // 确保底部tabbar可点
   var tb=document.querySelector('.fixed.bottom-0');
-  if(tb){tb.style.zIndex='9999';tb.style.pointerEvents='auto';}
+  if(tb){tb.style.zIndex='9999';tb.style.pointerEvents='';}var _bi=document.getElementById('tabBarInner');if(_bi){_bi.style.pointerEvents='auto';_bi.style.zIndex='100000';}
 
   $('addTodoBtn').onclick=function(){
     var t=$('todoInput').value.trim(),n=$('todoNoteInput').value.trim();
@@ -7129,7 +7175,7 @@ function _emergencyBind(){
       if(b._tabBound)return;b._tabBound=true;
       var fn=function(e){try{e.preventDefault();e.stopPropagation();}catch(_){}if(window._switchTab)window._switchTab(b.dataset.tab);};
       b.addEventListener('click',fn,{capture:true});
-      b.addEventListener('touchstart',fn,{passive:false,capture:true});
+      /* [iOS适配] 同上，touchstart 不切页 */
       b.style.cursor='pointer';b.style.pointerEvents='auto';b.style.position='relative';b.style.zIndex='100001';
       b.removeAttribute('disabled');
     });
@@ -9001,4 +9047,107 @@ setTimeout(_rebindModalBtns,800);
 
 </script>
 
+
+<script>
+/* ===== [本次调整] iOS 底部导航防误触 + 计划页高度自适应 ===== */
+(function(){
+  function $(id){return document.getElementById(id);}
+  var PAD=10;
+
+  /* A. 导航条：滑动/惯性滚动期间不响应点击 */
+  function guardBar(){
+    var inner=$('tabBarInner'); if(!inner||inner.__iosGuard)return; inner.__iosGuard=1;
+    var sx=0,sy=0,moved=false,lastScroll=0,lastSwitch=0;
+    function onScroll(){lastScroll=Date.now();}
+    window.addEventListener('scroll',onScroll,{passive:true});
+    document.addEventListener('scroll',onScroll,{passive:true,capture:true});
+    inner.addEventListener('touchstart',function(e){
+      var t=e.touches&&e.touches[0];moved=false;
+      if(t){sx=t.clientX;sy=t.clientY;}
+    },{capture:true,passive:true});
+    inner.addEventListener('touchmove',function(e){
+      var t=e.touches&&e.touches[0]; if(!t)return;
+      if(Math.abs(t.clientY-sy)>8||Math.abs(t.clientX-sx)>14){moved=true;}
+    },{capture:true,passive:true});
+    inner.addEventListener('click',function(e){
+      var b=(e.target&&e.target.closest)?e.target.closest('.tab-btn'):null;
+      if(!b)return;
+      var now=Date.now();
+      if(moved||(lastScroll&&now-lastScroll<300)||(lastSwitch&&now-lastSwitch<380)){
+        try{e.preventDefault();e.stopPropagation();}catch(_){}
+        moved=false;return;
+      }
+      lastSwitch=now;
+    },true);
+  }
+
+  /* B. 计划页：时间轴卡片按实测视口高度撑满 */
+  var wrapPadSaved=null;
+  function fitGap(){
+    try{
+      var gap=$('gap'),card=$('gapTLCard'),wrap=$('pageWrap'),root=$('tabBarRoot');
+      if(!card)return;
+      if(!gap||!gap.classList.contains('active')){
+        if(wrap&&wrapPadSaved!==null&&wrap.style.paddingBottom==='0px'){wrap.style.paddingBottom=wrapPadSaved;}
+        return;
+      }
+      if(wrap&&wrapPadSaved===null){
+        var m=/padding-bottom\s*:\s*([^;]+)/.exec(wrap.getAttribute('style')||'');
+        wrapPadSaved=m?m[1]:'68px';
+      }
+      if(wrap){wrap.style.paddingBottom='0px';}
+      /* 只给"看得见的白色导航条 + 安全区"让位，导航条上方的透明渐隐区不占高 */
+      var inner=$('tabBarInner'), vh=window.innerHeight||document.documentElement.clientHeight||740;
+      var barH=0;
+      if(inner){var ir=inner.getBoundingClientRect(); if(ir.height>0&&ir.top>0){barH=Math.round(vh-ir.top);}}
+      if(!barH&&root){var rr=root.getBoundingClientRect(); if(rr.height>0){barH=Math.round(rr.height)-22;}}
+      if(!barH){barH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap-barh'),10)||70;}
+      document.documentElement.style.setProperty('--gap-barh',barH+'px');
+      var top=card.getBoundingClientRect().top;
+      if(!(top>=0)||top>vh*0.55){top=16;}
+      var avail=Math.round(vh-top-barH-PAD);
+      if(avail<300)avail=300;
+      var prev=card.getAttribute('data-fit-h');
+      if(prev&&Math.abs(parseInt(prev,10)-avail)<=4){return;}
+      card.setAttribute('data-fit-h',String(avail));
+      card.style.height=avail+'px';
+      card.style.maxHeight='none';
+      card.style.minHeight='0';
+      var w=$('gapTimelineWrapper');
+      if(w){w.style.flex='1 1 auto';w.style.minHeight='0';w.style.height='';}
+      if(window._recalcGapWrapperH){try{window._recalcGapWrapperH();}catch(_){}}
+    }catch(e){}
+  }
+
+  function hookSwitch(){
+    ['_switchTab','switchTab'].forEach(function(name){
+      var orig=window[name];
+      if(typeof orig==='function'&&!orig.__fitHook){
+        var w=function(){
+          var args=Array.prototype.slice.call(arguments);
+          var r=orig.apply(this,args);
+          try{
+            if(args[0]==='gap'){[0,60,180,420,800].forEach(function(dd){setTimeout(fitGap,dd);});}
+            else{setTimeout(fitGap,0);}
+          }catch(_){}
+          return r;
+        };
+        w.__fitHook=1;window[name]=w;
+      }
+    });
+  }
+
+  function bind(){
+    guardBar();hookSwitch();fitGap();
+    window._fitGapCardHeight=fitGap;
+    ['resize','orientationchange'].forEach(function(ev){
+      window.addEventListener(ev,function(){setTimeout(fitGap,80);setTimeout(fitGap,340);},{passive:true});
+    });
+    if(window.visualViewport){window.visualViewport.addEventListener('resize',function(){setTimeout(fitGap,120);});}
+    setInterval(function(){try{var g=$('gap');if(g&&g.classList.contains('active'))fitGap();}catch(_){}},1500);
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',bind);}else{bind();}
+  window.addEventListener('load',function(){guardBar();hookSwitch();fitGap();setTimeout(fitGap,300);setTimeout(fitGap,1000);});
+})();
+</script>
 </body></html>
