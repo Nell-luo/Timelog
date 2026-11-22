@@ -46,7 +46,6 @@
 #gapTrainHeader .gt-hdr-btn:active{transform:scale(0.95);background:rgba(54,184,164,0.16);}
 #gapTrainHeader .gt-title-short{display:none;}
 #gapTrainHeader .gt-title{font-size:13px;font-weight:600;color:#1d8a7e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0!important;text-shadow:none!important;opacity:1!important;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
-#gapTrainHeader #gapTrainSummary{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px!important;padding:2px 6px!important;text-shadow:none!important;}
 /* 标题条整体去磨砂：纯白实底，文字与按钮不做半透明/投影/模糊处理 */
 #gapTrainHeader,#gapTrainHeader *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;text-shadow:none!important;}
 #gapTrainHeader{background:#ffffff!important;box-shadow:none!important;opacity:1!important;}
@@ -59,11 +58,14 @@
   #gapTrainHeader .gt-title{font-size:12px!important;}
   #gapTrainHeader .gt-title-full{display:none!important;}
   #gapTrainHeader .gt-title-short{display:inline!important;}
-  #gapTrainHeader #gapTrainSummary{max-width:86px!important;font-size:10px!important;padding:2px 6px!important;}
 }
 /* 训练头部整体高度收紧，把空间让给垂直时间轴 */
 /* 计划页整片通铺：卡片左右贴屏幕边、底部与导航面板无缝相接，杜绝露出页面底色形成的灰带 */
-#gapTLCard{padding:10px 14px!important;margin:2px 0 0!important;border-radius:16px!important;background:#ffffff!important;border:1px solid rgba(120,110,90,0.13)!important;box-shadow:0 1px 2px rgba(120,110,90,0.06)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+#gapTLCard{padding:10px 14px!important;margin:0!important;border-radius:16px!important;background:#ffffff!important;border:1px solid rgba(120,110,90,0.13)!important;box-shadow:0 1px 2px rgba(120,110,90,0.06)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+/* ===== [计划页] 周视图独立小卡片（置顶，与下方训练卡片分开） ===== */
+#gapWeekCard{background:#ffffff!important;border:1px solid rgba(120,110,90,0.13)!important;border-radius:16px!important;box-shadow:0 1px 2px rgba(120,110,90,0.06)!important;padding:10px 14px 8px!important;margin:-6px 0 10px!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+#gapWeekCard #gapDateRow{padding:0!important;margin:0!important;}
+#gapWeekCard #gwTop{margin-bottom:4px!important;}
 /* 时间轴盒子去掉灰色下边框，直接落到导航面板上，接缝处不再有任何灰线 */
 #gapTimelineWrapper{background:#ffffff!important;border:1px solid rgba(120,110,90,0.14)!important;border-radius:12px!important;}
 #gapTrainHeader{margin:-10px -14px 6px -14px!important;padding:8px 12px!important;border-radius:15px 15px 0 0!important;}
@@ -95,7 +97,6 @@
 .gw-dot{width:4px;height:4px;border-radius:50%;background:#f59e0b;display:block;}
 .gw-ul{width:16px;height:3px;border-radius:2px;background:#1d8a7e;display:block;margin-top:1px;}
 /* 无数据时不显示标题后的标签 */
-#gapTrainSummary.is-empty{display:none!important;}
 
 /* ===== [记录页] 分类「更多/收起」按钮 ===== */
 /* 去掉「更多」按钮的虚线边框：边框透明保留占位，尺寸不变 */
@@ -288,17 +289,8 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </div>
 
 <div id="gap" class="tab-content flex flex-col gap-0" style="display:none;padding-bottom:0;">
-<div id="gapTLCard" class="glass-card rounded-2xl p-3 shadow-lg flex flex-col" style="height:calc(100dvh - var(--gap-barh,70px) - 30px);min-height:0;max-height:none;overflow:hidden;">
-<!-- 页眉：时间感知力训练入口（参照记录页每日一句紫色渐变页眉效果，不斜体不加引号） -->
-<div id="gapTrainHeader" class="flex items-center justify-between transition select-none flex-shrink-0" style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;padding:8px 9px;margin:-10px -10px 6px -10px;background:#ffffff;border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.5;letter-spacing:0;text-shadow:none;box-shadow:none;position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:pan-y;-webkit-user-select:none;user-select:none;pointer-events:auto!important;z-index:50;">
-<button type="button" id="gapAddPlanTitleBtn" class="gt-hdr-btn" onclick="window._openAddPlan&amp;&amp;window._openAddPlan();return false;">📋 计划</button>
-<span class="gt-center" style="display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;flex:1 1 auto;overflow:hidden;">
-<span class="gt-title gt-title-full">时间感知力训练</span><span class="gt-title gt-title-short">感知力训练</span>
-<span id="gapTrainSummary" class="px-2 py-0.5 rounded-full" style="background:rgba(54,184,164,0.18);color:#1d8a7e;font-weight:500;">近7天</span>
-</span>
-<button type="button" id="gapActualTitleBtn" class="gt-hdr-btn" onclick="window._openBackfill&amp;&amp;window._openBackfill();return false;">📋 实际</button>
-</div>
-<!-- 周视图导航条（替代原「‹ 11月22日 周日 ›」单日切换） -->
+<!-- 周视图：独立置顶小卡片 -->
+<div id="gapWeekCard" class="glass-card flex flex-col flex-shrink-0">
 <div id="gapDateRow" class="flex-shrink-0 px-1">
 <div id="gwTop">
 <button type="button" id="gapWeekPrev" class="gw-arrow" aria-label="上一周">‹</button>
@@ -312,6 +304,17 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 <div id="gwDays"></div>
 <span id="gapDateLabel" style="display:none"></span>
 </div>
+</div>
+<div id="gapTLCard" class="glass-card rounded-2xl p-3 shadow-lg flex flex-col" style="height:calc(100dvh - var(--gap-barh,70px) - 30px);min-height:0;max-height:none;overflow:hidden;">
+<!-- 页眉：时间感知力训练入口（参照记录页每日一句紫色渐变页眉效果，不斜体不加引号） -->
+<div id="gapTrainHeader" class="flex items-center justify-between transition select-none flex-shrink-0" style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;padding:8px 9px;margin:-10px -10px 6px -10px;background:#ffffff;border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.5;letter-spacing:0;text-shadow:none;box-shadow:none;position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:pan-y;-webkit-user-select:none;user-select:none;pointer-events:auto!important;z-index:50;">
+<button type="button" id="gapAddPlanTitleBtn" class="gt-hdr-btn" onclick="window._openAddPlan&amp;&amp;window._openAddPlan();return false;">📋 计划</button>
+<span class="gt-center" style="display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;flex:1 1 auto;overflow:hidden;">
+<span class="gt-title gt-title-full">时间感知力训练</span><span class="gt-title gt-title-short">感知力训练</span>
+</span>
+<button type="button" id="gapActualTitleBtn" class="gt-hdr-btn" onclick="window._openBackfill&amp;&amp;window._openBackfill();return false;">📋 实际</button>
+</div>
+<!-- 周视图导航条（替代原「‹ 11月22日 周日 ›」单日切换） -->
 <div class="gap-timeline-wrapper rounded-xl border border-gray-200 bg-white" id="gapTimelineWrapper" style="flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;position:relative;">
 <div class="gap-timeline-container" id="gapTimelineContainer" style="position:relative;width:100%;">
 <div class="gap-timeline-scroll" id="gapTimelineScroll" style="position:relative;overflow:visible;">
