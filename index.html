@@ -42,11 +42,14 @@
 
 /* ===== [计划页] 训练头部：不再弹窗 + 计划/实际按钮上移 ===== */
 #gapTrainHeader{cursor:default!important;background:#ffffff!important;box-shadow:none!important;border-radius:0!important;border-bottom:1px solid rgba(54,184,164,0.35)!important;}
-#gapTrainHeader .gt-hdr-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;flex-shrink:0;padding:5px 8px;border-radius:10px;font-size:12px;line-height:1.1;background:rgba(255,255,255,0.72);box-shadow:0 1px 3px rgba(0,0,0,0.07),inset 0 0 0 1px rgba(54,184,164,0.22);color:#1f2937!important;pointer-events:auto;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(54,184,164,0.1);position:relative;z-index:60;transition:all .18s;}
+#gapTrainHeader .gt-hdr-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;flex-shrink:0;padding:5px 8px;border-radius:10px;font-size:12px;line-height:1.1;background:#ffffff;box-shadow:inset 0 0 0 1px rgba(54,184,164,0.22);color:#1f2937!important;pointer-events:auto;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(54,184,164,0.1);position:relative;z-index:60;transition:all .18s;}
 #gapTrainHeader .gt-hdr-btn:active{transform:scale(0.95);background:rgba(54,184,164,0.16);}
 #gapTrainHeader .gt-title-short{display:none;}
-#gapTrainHeader .gt-title{font-size:12.5px;font-weight:600;color:#1d8a7e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#gapTrainHeader #gapTrainSummary{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px!important;padding:2px 6px!important;}
+#gapTrainHeader .gt-title{font-size:13px;font-weight:600;color:#1d8a7e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0!important;text-shadow:none!important;opacity:1!important;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;}
+#gapTrainHeader #gapTrainSummary{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px!important;padding:2px 6px!important;text-shadow:none!important;}
+/* 标题条整体去磨砂：纯白实底，文字与按钮不做半透明/投影/模糊处理 */
+#gapTrainHeader,#gapTrainHeader *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;filter:none!important;text-shadow:none!important;}
+#gapTrainHeader{background:#ffffff!important;box-shadow:none!important;opacity:1!important;}
 /* 窄屏（≤360px，如 iPhone SE 首代）微调，保证头部三件套不挤压 */
 @media (max-width:400px){
   #gapTrainHeader{gap:5px!important;}
@@ -60,7 +63,7 @@
 }
 /* 训练头部整体高度收紧，把空间让给垂直时间轴 */
 /* 计划页整片通铺：卡片左右贴屏幕边、底部与导航面板无缝相接，杜绝露出页面底色形成的灰带 */
-#gapTLCard{padding:10px 14px!important;margin:-11px 0 0!important;border-radius:16px!important;background:#ffffff!important;border:1px solid rgba(120,110,90,0.13)!important;box-shadow:0 1px 2px rgba(120,110,90,0.06)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+#gapTLCard{padding:10px 14px!important;margin:-6px 0 0!important;border-radius:16px!important;background:#ffffff!important;border:1px solid rgba(120,110,90,0.13)!important;box-shadow:0 1px 2px rgba(120,110,90,0.06)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
 /* 时间轴盒子去掉灰色下边框，直接落到导航面板上，接缝处不再有任何灰线 */
 #gapTimelineWrapper{background:#ffffff!important;border:1px solid rgba(120,110,90,0.14)!important;border-radius:12px!important;}
 #gapTrainHeader{margin:-10px -14px 6px -14px!important;padding:8px 12px!important;border-radius:15px 15px 0 0!important;}
@@ -95,11 +98,12 @@
 #gapTrainSummary.is-empty{display:none!important;}
 
 /* ===== [记录页] 分类「更多/收起」按钮 ===== */
-#categoriesGrid .cat-more-btn{background:rgba(120,110,90,0.07)!important;border:1px dashed rgba(120,110,90,0.30)!important;color:#6b7280!important;}
+/* 去掉「更多」按钮的虚线边框：边框透明保留占位，尺寸不变 */
+#categoriesGrid .cat-more-btn{background:rgba(120,110,90,0.07)!important;border:1px solid transparent!important;color:#6b7280!important;}
 #categoriesGrid .cat-more-btn .cat-icon{background:rgba(120,110,90,0.13);color:#6b7280;font-size:15px;line-height:1;}
 #categoriesGrid .cat-more-btn .text-xs{color:#6b7280!important;}
 #categoriesGrid .cat-more-btn:active{transform:scale(0.96);}
-#categoriesGrid .cat-more-btn.open{background:rgba(54,184,164,0.10)!important;border-color:rgba(54,184,164,0.34)!important;}
+#categoriesGrid .cat-more-btn.open{background:rgba(54,184,164,0.10)!important;border-color:transparent!important;}
 #categoriesGrid .cat-more-btn.open .cat-icon{background:rgba(54,184,164,0.16);color:#1d8a7e;}
 #categoriesGrid .cat-more-btn.open .text-xs{color:#1d8a7e!important;}
 
@@ -108,11 +112,11 @@
 #manageEntryCard .entry-btn:active{transform:scale(0.97);opacity:.85;}
 
 *{-webkit-tap-highlight-color:transparent;}
-html{background:#f6f3ec;}
+html{background:#fcfaf6;}
 body{background:transparent;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
 /* 页面背景：顶部纯白渐变到底部淡绿，固定层不随滚动位移 */
-/* 页面背景：统一淡淡米白（极轻的自上而下过渡，避免死板） */
-#bgLayer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;pointer-events:none;display:block;background:linear-gradient(180deg,#fbf9f4 0%,#f9f6f0 48%,#f4f0e7 100%);}
+/* 页面背景：全站统一淡米白（接近白色的米白纯色，不再做渐变） */
+#bgLayer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;pointer-events:none;display:block;background:#fcfaf6;}
 .glass-card{background:#ffffff;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(120,110,90,0.13);}
 .tab-content{display:none;animation:fadeIn 0.3s;pointer-events:auto;padding-bottom:72px;}
 .tab-content.active{display:block;}
@@ -286,7 +290,7 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 <div id="gap" class="tab-content flex flex-col gap-0" style="display:none;padding-bottom:0;">
 <div id="gapTLCard" class="glass-card rounded-2xl p-3 shadow-lg flex flex-col" style="height:calc(100dvh - var(--gap-barh,70px) - 30px);min-height:0;max-height:none;overflow:hidden;">
 <!-- 页眉：时间感知力训练入口（参照记录页每日一句紫色渐变页眉效果，不斜体不加引号） -->
-<div id="gapTrainHeader" class="flex items-center justify-between transition select-none flex-shrink-0" style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;padding:8px 9px;margin:-10px -10px 6px -10px;background:linear-gradient(90deg,rgba(54,184,164,0.10),rgba(54,184,164,0.20),rgba(54,184,164,0.10));border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.5;letter-spacing:0.3px;text-shadow:none;box-shadow:0 2px 12px rgba(54,184,164,0.15);position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:pan-y;-webkit-user-select:none;user-select:none;pointer-events:auto!important;z-index:50;">
+<div id="gapTrainHeader" class="flex items-center justify-between transition select-none flex-shrink-0" style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:6px;padding:8px 9px;margin:-10px -10px 6px -10px;background:#ffffff;border-radius:16px 16px 0 0;font-size:14px;font-weight:600;color:#1d8a7e;line-height:1.5;letter-spacing:0;text-shadow:none;box-shadow:none;position:relative;border-bottom:1px solid rgba(54,184,164,0.3);-webkit-tap-highlight-color:transparent;touch-action:pan-y;-webkit-user-select:none;user-select:none;pointer-events:auto!important;z-index:50;">
 <button type="button" id="gapAddPlanTitleBtn" class="gt-hdr-btn" onclick="window._openAddPlan&amp;&amp;window._openAddPlan();return false;">📋 计划</button>
 <span class="gt-center" style="display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;flex:1 1 auto;overflow:hidden;">
 <span class="gt-title gt-title-full">时间感知力训练</span><span class="gt-title gt-title-short">感知力训练</span>
