@@ -60,10 +60,10 @@
 }
 /* 训练头部整体高度收紧，把空间让给垂直时间轴 */
 /* 计划页整片通铺：卡片左右贴屏幕边、底部与导航面板无缝相接，杜绝露出页面底色形成的灰带 */
-#gapTLCard{padding:10px 16px 0!important;margin:-16px -16px 0!important;box-shadow:none!important;border-radius:0!important;border:none!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+#gapTLCard{padding:10px 14px!important;margin:-11px 0 0!important;border-radius:16px!important;background:#ffffff!important;border:1px solid rgba(120,110,90,0.13)!important;box-shadow:0 1px 2px rgba(120,110,90,0.06)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
 /* 时间轴盒子去掉灰色下边框，直接落到导航面板上，接缝处不再有任何灰线 */
-#gapTimelineWrapper{border-bottom:none!important;border-radius:12px 12px 0 0!important;background:transparent!important;border-left-color:rgba(54,184,164,0.18)!important;border-right-color:rgba(54,184,164,0.18)!important;border-top-color:rgba(54,184,164,0.18)!important;}
-#gapTrainHeader{margin:-10px -16px 6px -16px!important;padding:8px 12px!important;}
+#gapTimelineWrapper{background:#ffffff!important;border:1px solid rgba(120,110,90,0.14)!important;border-radius:12px!important;}
+#gapTrainHeader{margin:-10px -14px 6px -14px!important;padding:8px 12px!important;border-radius:15px 15px 0 0!important;}
 #gapDateRow{margin-bottom:2px!important;}
 
 /* ===== [计划页] 周视图导航条 ===== */
@@ -94,16 +94,26 @@
 /* 无数据时不显示标题后的标签 */
 #gapTrainSummary.is-empty{display:none!important;}
 
+/* ===== [记录页] 分类「更多/收起」按钮 ===== */
+#categoriesGrid .cat-more-btn{background:rgba(120,110,90,0.07)!important;border:1px dashed rgba(120,110,90,0.30)!important;color:#6b7280!important;}
+#categoriesGrid .cat-more-btn .cat-icon{background:rgba(120,110,90,0.13);color:#6b7280;font-size:15px;line-height:1;}
+#categoriesGrid .cat-more-btn .text-xs{color:#6b7280!important;}
+#categoriesGrid .cat-more-btn:active{transform:scale(0.96);}
+#categoriesGrid .cat-more-btn.open{background:rgba(54,184,164,0.10)!important;border-color:rgba(54,184,164,0.34)!important;}
+#categoriesGrid .cat-more-btn.open .cat-icon{background:rgba(54,184,164,0.16);color:#1d8a7e;}
+#categoriesGrid .cat-more-btn.open .text-xs{color:#1d8a7e!important;}
+
 /* ===== [管理页] 从记录页迁移过来的快捷入口卡片 ===== */
 #manageEntryCard .entry-btn{display:flex;align-items:center;justify-content:center;gap:6px;flex:1 1 0%;min-width:0;padding:11px 10px;border-radius:14px;font-size:13px;font-weight:500;letter-spacing:0.2px;background:#f7f3ea;color:#1f2937;border:none;box-shadow:0 1px 2px rgba(0,0,0,0.08),inset 0 0 0 1px rgba(0,0,0,0.05);-webkit-tap-highlight-color:rgba(0,0,0,0.06);cursor:pointer;touch-action:manipulation;transition:all .18s;}
 #manageEntryCard .entry-btn:active{transform:scale(0.97);opacity:.85;}
 
 *{-webkit-tap-highlight-color:transparent;}
-html{background:#ffffff;}
+html{background:#f6f3ec;}
 body{background:transparent;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
 /* 页面背景：顶部纯白渐变到底部淡绿，固定层不随滚动位移 */
-#bgLayer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;pointer-events:none;display:block;background:linear-gradient(180deg,#ffffff 0%,#ffffff 32%,#f4fbf8 58%,#e7f7f0 82%,#dcf4e9 100%);}
-.glass-card{background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.6);}
+/* 页面背景：统一淡淡米白（极轻的自上而下过渡，避免死板） */
+#bgLayer{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;pointer-events:none;display:block;background:linear-gradient(180deg,#fbf9f4 0%,#f9f6f0 48%,#f4f0e7 100%);}
+.glass-card{background:#ffffff;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(120,110,90,0.13);}
 .tab-content{display:none;animation:fadeIn 0.3s;pointer-events:auto;padding-bottom:72px;}
 .tab-content.active{display:block;}
 #gap.tab-content.active{display:flex;}
@@ -2250,6 +2260,9 @@ function renderTodos(){
   if(window._refreshQuotePanelHeight)setTimeout(window._refreshQuotePanelHeight,50);
 }
 
+/* 记录页分类固定顺序：第一行 作息-阅读-运动-学习，第二行 复盘-生活-陪伴-更多 */
+var CAT_PRIMARY=['rest','reading','exercise','study','review','life','companion'];
+try{window._catGridExpanded=(localStorage.getItem('timelog_cat_expanded')==='1');}catch(_){window._catGridExpanded=false;}
 function renderCatGrid(){
   var g=$('categoriesGrid');
   if(!g){console.warn('categoriesGrid不存在');return;}
@@ -2257,9 +2270,15 @@ function renderCatGrid(){
   g.style.gridTemplateColumns='repeat(4,1fr)';
   g.style.gap='8px';
   g.innerHTML='';
-  // 按分类管理（appData.categories）的顺序渲染，所有分类显示，2行4列+滚动
-  appData.categories.forEach(function(c){
-    if(!c||c.show===false)return;
+  var pool=[];
+  appData.categories.forEach(function(c){if(c&&c.show!==false)pool.push(c);});
+  var head=[],tail=[];
+  CAT_PRIMARY.forEach(function(id){
+    for(var i=0;i<pool.length;i++){if(pool[i].id===id){head.push(pool[i]);pool.splice(i,1);return;}}
+  });
+  tail=pool; /* 未列入前两行的分类（交通/购物/娱乐/计划…）统一收进「更多」 */
+  var exp=window._catGridExpanded===true;
+  function cell(c){
     var a=appData.currentTimer&&appData.currentTimer.categoryId===c.id;
     var b=document.createElement('button');
     b.type='button';
@@ -2272,7 +2291,23 @@ function renderCatGrid(){
     if(a)b.classList.add('active');
     b.onclick=function(){startTimer(c.id);};
     g.appendChild(b);
-  });
+  }
+  head.forEach(cell);
+  if(tail.length){
+    var m=document.createElement('button');
+    m.type='button';
+    m.className='category-btn cat-more-btn flex flex-col items-center justify-center p-1.5 rounded-xl transition-all'+(exp?' open':'');
+    m.style.minHeight='60px';
+    m.style.maxHeight='60px';
+    m.innerHTML='<span class="cat-icon mb-1 w-9 h-9 flex items-center justify-center rounded-xl">'+(exp?'\u25b4':'\u25be')+'</span><span class="text-xs font-medium">'+(exp?'收起':'更多')+'</span>';
+    m.onclick=function(){
+      window._catGridExpanded=!exp;
+      try{localStorage.setItem('timelog_cat_expanded',window._catGridExpanded?'1':'0');}catch(_){}
+      renderCatGrid();
+    };
+    g.appendChild(m);
+    if(exp)tail.forEach(cell);
+  }
 }
 
 function renderTimeline(){
@@ -9211,7 +9246,7 @@ setTimeout(_rebindModalBtns,800);
 /* ===== [本次调整] iOS 底部导航防误触 + 计划页高度自适应 ===== */
 (function(){
   function $(id){return document.getElementById(id);}
-  var PAD=0;
+  var PAD=8;
 
   /* A. 导航条：滑动/惯性滚动期间不响应点击 */
   function guardBar(){
@@ -9264,7 +9299,7 @@ setTimeout(_rebindModalBtns,800);
       if(!barH){barH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap-barh'),10)||70;}
       document.documentElement.style.setProperty('--gap-barh',barH+'px');
       var top=card.getBoundingClientRect().top;
-      if(!(top>=0)||top>vh*0.55){top=16;}
+      if(!(top>=0)||top>vh*0.55){top=5;}
       var avail=Math.round(vh-top-barH-PAD);
       if(avail<300)avail=300;
       var prev=card.getAttribute('data-fit-h');
