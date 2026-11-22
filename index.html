@@ -22,17 +22,23 @@
 .tab-btn>span{display:inline-flex!important;flex:0 0 auto!important;margin:0!important;padding:0!important;flex-direction:row!important;align-items:center!important;line-height:1!important;font-size:14px!important;}
 .tab-btn>span+span{margin-left:1px!important;font-size:12px!important;line-height:1!important;white-space:nowrap!important;flex:0 1 auto!important;overflow:hidden!important;text-overflow:ellipsis!important;}
 
-/* ===== [iOS适配] 底部导航栏：滑动不误触 ===== */
-/* 外层只负责定位，整块不接收触摸；滑动手势交给页面滚动 */
-#tabBarRoot{pointer-events:none!important;touch-action:pan-y!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;background:none!important;}
-#tabBarFade{pointer-events:none!important;}
-/* 真正可点的只有白色胶囊条本身 */
-#tabBarInner{pointer-events:auto!important;touch-action:pan-y!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;}
+/* ===== [iOS适配] 底部导航栏：占满底部的实心面板（无磨砂、无悬浮胶囊） ===== */
+#tabBarRoot{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;max-width:100%!important;
+  background:#ffffff!important;border-top:1px solid rgba(54,184,164,0.16)!important;border-radius:0!important;
+  box-shadow:0 -2px 12px rgba(31,41,55,0.06)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding:6px 12px calc(env(safe-area-inset-bottom) + 6px)!important;margin:0!important;
+  pointer-events:auto!important;touch-action:pan-y!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;}
+/* 面板内不再套一层圆角卡片：透明铺满 */
+#tabBarInner{background:transparent!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0!important;border-radius:0!important;margin:0!important;width:100%!important;
+  pointer-events:auto!important;touch-action:pan-y!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;}
 /* pan-y = 竖向滑动一律当作滚动页面处理，不生成点击 */
 .tab-btn{touch-action:pan-y!important;-webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important;}
-#tabBarInner .tab-btn{min-height:42px!important;padding:5px 4px!important;}
-/* 页面底部留白：按导航条实际高度让位，避免内容被压住 */
-#record.tab-content,#history.tab-content{padding-bottom:calc(env(safe-area-inset-bottom) + 80px)!important;}
+#tabBarInner .tab-btn{min-height:44px!important;padding:6px 4px!important;border-radius:12px!important;}
+/* 实心面板上用纯色块表示选中，去掉彩色投影光晕 */
+#tabBarInner .tab-btn[aria-selected="true"]{box-shadow:none!important;background:rgba(54,184,164,0.14)!important;color:#1a7a6f!important;}
+#tabBarInner .tab-btn[aria-selected="true"] span{color:#1a7a6f!important;}
+/* 页面底部留白：按面板实际高度让位 */
+#record.tab-content,#history.tab-content{padding-bottom:calc(env(safe-area-inset-bottom) + 76px)!important;}
 
 /* ===== [计划页] 训练头部：不再弹窗 + 计划/实际按钮上移 ===== */
 #gapTrainHeader{cursor:default!important;}
@@ -59,11 +65,17 @@
 
 /* ===== [计划页] 周视图导航条 ===== */
 #gwTop{display:flex;align-items:center;gap:7px;flex-shrink:0;margin-bottom:2px;}
+/* 胶囊与日期范围成一组，整体居中、彼此贴近 */
+#gwMid{display:flex;align-items:center;justify-content:center;gap:4px;flex:1 1 auto;min-width:0;}
 .gw-arrow{width:29px;height:29px;border-radius:50%;background:#ffffff;border:1px solid #e2e8f0;color:#374151;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,0.05);box-shadow:0 1px 2px rgba(0,0,0,0.04);}
 .gw-arrow:active{background:#f1f5f9;transform:scale(0.94);}
-.gw-pill{padding:4px 11px;border-radius:9999px;background:rgba(54,184,164,0.12);color:#1d8a7e;font-size:12px;font-weight:600;line-height:1.35;flex-shrink:0;cursor:pointer;touch-action:manipulation;border:none;-webkit-tap-highlight-color:rgba(54,184,164,0.12);}
-.gw-pill.cur{background:rgba(54,184,164,0.24);box-shadow:inset 0 0 0 1px rgba(29,138,126,0.28);}
-#gwRange{flex:1 1 auto;min-width:0;font-size:12.5px;font-weight:500;color:#374151;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gw-pill{padding:4px 10px;border-radius:9999px;background:rgba(54,184,164,0.14);color:#1d8a7e;font-size:12px;font-weight:600;line-height:1.35;flex-shrink:0;cursor:pointer;touch-action:manipulation;border:none;-webkit-tap-highlight-color:rgba(54,184,164,0.12);transition:background .18s,color .18s;}
+.gw-pill.cur{background:rgba(54,184,164,0.24);color:#1a7a6f;box-shadow:inset 0 0 0 1px rgba(29,138,126,0.28);}
+/* 过去：浅灰底 + 灰字 */
+.gw-pill.past{background:#f0f2f4;color:#8a94a0;box-shadow:none;}
+/* 未来：浅豆沙底 + 豆沙字 */
+.gw-pill.next{background:#f8e9e4;color:#b4685a;box-shadow:none;}
+#gwRange{flex:0 1 auto;min-width:0;font-size:12.5px;font-weight:500;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .gw-cal{width:29px;height:29px;border-radius:9px;background:linear-gradient(135deg,#1d8a7e,#36b8a4);color:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;touch-action:manipulation;border:none;box-shadow:0 2px 6px rgba(29,138,126,0.26);-webkit-tap-highlight-color:rgba(0,0,0,0.05);}
 .gw-cal:active{transform:scale(0.94);}
 #gwDays{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;flex-shrink:0;margin:0 -2px 0;}
@@ -269,8 +281,10 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 <div id="gapDateRow" class="flex-shrink-0 px-1">
 <div id="gwTop">
 <button type="button" id="gapWeekPrev" class="gw-arrow" aria-label="上一周">‹</button>
-<button type="button" id="gwThisBtn" class="gw-pill">本周</button>
+<div id="gwMid">
+<button type="button" id="gwThisBtn" class="gw-pill cur">本周</button>
 <span id="gwRange">--</span>
+</div>
 <button type="button" id="gapWeekNext" class="gw-arrow" aria-label="下一周">›</button>
 <button type="button" id="gwCalBtn" class="gw-cal" aria-label="选择日期"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block"><rect x="3" y="5" width="18" height="16" rx="3"></rect><line x1="3" y1="10" x2="21" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line><circle cx="12" cy="15.5" r="1.6" fill="#fff" stroke="none"></circle></svg></button>
 </div>
@@ -754,9 +768,8 @@ textarea::placeholder{font-size:12px !important;color:#9ca3af;opacity:1;-webkit-
 </div>
 </div>
 
-<div id="tabBarRoot" class="fixed bottom-0 left-0 right-0 px-3" style="z-index:99999;pointer-events:none;touch-action:pan-y;background:none;padding-top:30px;padding-bottom:calc(env(safe-area-inset-bottom) + 10px);">
-<div id="tabBarFade" style="position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;background:linear-gradient(to top,rgba(255,255,255,0.90) 0%,rgba(255,255,255,0.5) 60%,rgba(255,255,255,0) 100%);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:26px 26px 0 0;"></div>
-<div id="tabBarInner" class="rounded-2xl shadow-lg flex gap-1" style="position:relative;z-index:100000;pointer-events:auto;touch-action:pan-y;background:rgba(255,255,255,0.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(54,184,164,0.18);padding:5px 7px;">
+<div id="tabBarRoot" class="fixed bottom-0 left-0 right-0" style="z-index:99999;pointer-events:auto;touch-action:pan-y;">
+<div id="tabBarInner" class="flex gap-1" style="position:relative;z-index:100000;pointer-events:auto;touch-action:pan-y;">
 <button type="button" class="tab-btn flex-1 py-2.5 px-2 rounded-xl text-indigo-600 font-bold text-sm flex items-center justify-center gap-1.5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]" data-tab="record" onclick="window._switchTab&amp;&amp;window._switchTab('record')" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;color:#36b8a4;font-weight:700;background:transparent;box-shadow:none;position:relative;will-change:transform;"><span class="text-base leading-none">📝</span><span class="text-[13px] leading-none" style="color:#36b8a4;">记录</span></button>
 <button type="button" class="tab-btn flex-1 py-2.5 px-2 rounded-xl text-gray-500 font-medium text-sm flex items-center justify-center gap-1.5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]" data-tab="gap" onclick="window._switchTab&amp;&amp;window._switchTab('gap')" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:6px;background:transparent;box-shadow:none;position:relative;will-change:transform;"><span class="text-base leading-none">📋</span><span class="text-[13px] leading-none text-gray-500">计划</span></button>
 <button type="button" class="tab-btn flex-1 py-2.5 px-2 rounded-xl text-gray-500 font-medium text-sm flex items-center justify-center gap-1.5 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]" data-tab="stats" onclick="window._switchTab&amp;&amp;window._switchTab('stats')" style="display:none !important;flex-direction:row;align-items:center;justify-content:center;gap:6px;background:transparent;box-shadow:none;position:relative;will-change:transform;"><span class="text-base leading-none">📊</span><span class="text-[13px] leading-none text-gray-500">分析</span></button>
@@ -4186,15 +4199,16 @@ function expData(){
   if(appData.todos&&typeof appData.todos==='object')Object.keys(appData.todos).forEach(function(d){if(Array.isArray(appData.todos[d]))todoCnt+=appData.todos[d].length;});
 
   /* Sheet1: 时间记录 */
-  var recHeader=['日期','开始时间','结束时间','时长(分钟)','分类ID','分类名称','备注','是否碎片'];
+  var recHeader=['日期','开始时间','结束时间','时长(分钟)','分类ID','分类名称','备注','是否碎片','运动子类','实际专注(分钟)'];
   var recRows=[recHeader];
   appData.records.slice().sort(function(a,b){return new Date(a.startTime)-new Date(b.startTime);}).forEach(function(r){
     var s=new Date(r.startTime),e=r.endTime?new Date(r.endTime):new Date(),cat=getCat(r.categoryId),m=Math.round((e-s)/60000);
-    recRows.push([formatDate(s),formatTime(s),formatTime(e),m,r.categoryId,cat.name,r.note||'',r.isFragment?'是':'否']);
+    var _eff=(typeof r.effectiveMs==='number'&&r.effectiveMs>0)?Math.round(r.effectiveMs/60000):'';
+    recRows.push([formatDate(s),formatTime(s),formatTime(e),m,r.categoryId,cat.name,r.note||'',r.isFragment?'是':'否',r.subtype||'',_eff]);
   });
 
   /* Sheet2: 计划数据 */
-  var planHeader=['日期','开始时间','结束时间','时长(分钟)','分类ID','分类名称','计划内容','备注','是否完成'];
+  var planHeader=['日期','开始时间','结束时间','时长(分钟)','分类ID','分类名称','计划内容','备注','是否完成','运动子类'];
   var planRows=[planHeader];
   Object.keys(appData.plans||{}).sort().forEach(function(d){
     (appData.plans[d]||[]).forEach(function(p){
@@ -4203,7 +4217,7 @@ function expData(){
       if(p.startTime&&p.endTime){
         try{var ps=new Date(d+'T'+p.startTime),pe=new Date(d+'T'+p.endTime);m=Math.round((pe-ps)/60000);}catch(_){}
       }
-      planRows.push([d,p.startTime||'',p.endTime||'',m,p.categoryId,cat?cat.name:'',p.text||'',p.note||'',p.done?'是':'否']);
+      planRows.push([d,p.startTime||'',p.endTime||'',m,p.categoryId,cat?cat.name:'',p.text||'',p.note||'',p.done?'是':'否',p.subtype||'']);
     });
   });
 
@@ -4217,22 +4231,38 @@ function expData(){
     });
   });
 
+  /* Sheet4: 周期计划（规则以JSON存储，保证导入后不丢） */
+  var rpRows=[['编号','名称','分类ID','分类名称','计划内容','开始时间','结束时间','重复规则JSON','备注']];
+  var rpCnt=0;
+  try{
+    (appData.recurringPlans||[]).forEach(function(rp){
+      if(!rp||!rp.rule)return;
+      var cat=null;try{cat=getCat(rp.categoryId);}catch(_){}
+      var rj='';try{rj=JSON.stringify(rp.rule);}catch(_){rj='';}
+      rpRows.push([rp.id||'',rp.name||rp.text||'',rp.categoryId||'other',cat?cat.name:'',rp.text||'',rp.startTime||'',rp.endTime||'',rj,rp.note||'']);
+      rpCnt++;
+    });
+  }catch(_){}
+
   /* 生成Excel */
   var wb=XLSX.utils.book_new();
   var ws1=XLSX.utils.aoa_to_sheet(recRows);
   var ws2=XLSX.utils.aoa_to_sheet(planRows);
   var ws3=XLSX.utils.aoa_to_sheet(todoRows);
   /* 列宽自适应 */
-  ws1['!cols']=[{wch:12},{wch:10},{wch:10},{wch:12},{wch:12},{wch:12},{wch:30},{wch:8}];
-  ws2['!cols']=[{wch:12},{wch:10},{wch:10},{wch:12},{wch:12},{wch:12},{wch:20},{wch:20},{wch:8}];
+  ws1['!cols']=[{wch:12},{wch:10},{wch:10},{wch:12},{wch:12},{wch:12},{wch:30},{wch:8},{wch:10},{wch:14}];
+  ws2['!cols']=[{wch:12},{wch:10},{wch:10},{wch:12},{wch:12},{wch:12},{wch:20},{wch:20},{wch:8},{wch:10}];
   ws3['!cols']=[{wch:12},{wch:30},{wch:20},{wch:8},{wch:20}];
   XLSX.utils.book_append_sheet(wb,ws1,'📊 时间记录');
   XLSX.utils.book_append_sheet(wb,ws2,'📋 计划数据');
+  var ws4=XLSX.utils.aoa_to_sheet(rpRows);
+  ws4['!cols']=[{wch:22},{wch:16},{wch:12},{wch:12},{wch:20},{wch:10},{wch:10},{wch:60},{wch:16}];
   XLSX.utils.book_append_sheet(wb,ws3,'✅ 待办数据');
+  XLSX.utils.book_append_sheet(wb,ws4,'🔁 周期计划');
 
   var fname='Timelog导出_'+formatDate(new Date())+'.xlsx';
   XLSX.writeFile(wb,fname);
-  _forceToast('导出完成：'+recCnt+'条记录，'+planCnt+'条计划，'+todoCnt+'条待办');
+  _forceToast('导出完成：'+recCnt+'条记录，'+planCnt+'条计划，'+rpCnt+'条周期计划，'+todoCnt+'条待办');
 }
 
 /* 统一导入：JSON / Excel */
@@ -4343,6 +4373,8 @@ function _impExcel(f){
             else if(k.indexOf('分类名')>=0||k.indexOf('分类名称')>=0)rColMap.cname=ci;
             else if(k==='备注'||k.indexOf('备注')>=0)rColMap.note=ci;
             else if(k.indexOf('碎片')>=0)rColMap.frag=ci;
+            else if(k.indexOf('子类')>=0||k.toLowerCase().indexOf('subtype')>=0)rColMap.subtype=ci;
+            else if(k.indexOf('实际专注')>=0||k.indexOf('专注')>=0)rColMap.eff=ci;
           });
           /* 无表头（列名完全不匹配）时使用默认列顺序 */
           if(Object.keys(rColMap).length<3){rColMap={date:0,start:1,end:2,mins:3,cid:4,cname:5,note:6,frag:7};}
@@ -4389,7 +4421,12 @@ function _impExcel(f){
               }
               if(!dup){
                 var rid=genId();
-                appData.records.push({id:rid,categoryId:cid,startTime:sT.toISOString(),endTime:eT.toISOString(),note:note,isFragment:isFrag,source:'import'});
+                var _rsu=rColMap.subtype!=null?String(_safeGet(row,rColMap.subtype)||'').trim():'';
+                var _ref=rColMap.eff!=null?Number(String(_safeGet(row,rColMap.eff)||'').replace(/[^0-9.\-]/g,'')):NaN;
+                var _robj={id:rid,categoryId:cid,startTime:sT.toISOString(),endTime:eT.toISOString(),note:note,isFragment:isFrag,source:'import'};
+                if(_rsu)_robj.subtype=_rsu;
+                if(!isNaN(_ref)&&_ref>0)_robj.effectiveMs=Math.round(_ref*60000);
+                appData.records.push(_robj);
                 newRec++;
               }
             }catch(er2){console.warn('记录行解析错误:',er2,row);}
@@ -4415,6 +4452,7 @@ function _impExcel(f){
             else if(k.indexOf('计划内容')>=0||k.indexOf('内容')>=0||k==='计划名')pColMap.text=ci;
             else if(k==='备注'||k.indexOf('备注')>=0)pColMap.note=ci;
             else if(k.indexOf('是否完成')>=0||k==='完成'||k.indexOf('完成')>=0)pColMap.done=ci;
+            else if(k.indexOf('子类')>=0||k.toLowerCase().indexOf('subtype')>=0)pColMap.subtype=ci;
           });
           if(Object.keys(pColMap).length<3){pColMap={date:0,start:1,end:2,mins:3,cid:4,cname:5,text:6,note:7,done:8};}
           for(var ri=1;ri<prow.length;ri++){
@@ -4438,12 +4476,67 @@ function _impExcel(f){
             });
             if(!pdup){
               var pid=genId();
-              appData.plans[date].push({id:pid,categoryId:cid,text:txt,note:note,startTime:st,endTime:et,done:done});
+              var _psu=pColMap.subtype!=null?String(_safeGet(row,pColMap.subtype)||'').trim():'';
+              var _pobj={id:pid,categoryId:cid,text:txt,note:note,startTime:st,endTime:et,done:done};
+              if(_psu)_pobj.subtype=_psu;
+              appData.plans[date].push(_pobj);
               newPlan++;
             }else{dupPlan++;}
           }
         }
       }
+
+      /* ========== Sheet4: 周期计划 ========== */
+      var newRP=0;
+      try{
+        var rpSheetNames=['🔁 周期计划','周期计划','recurringPlans','recurring'];
+        var rpWS=null;
+        for(var ri0=0;ri0<rpSheetNames.length;ri0++){if(wb.Sheets[rpSheetNames[ri0]]){rpWS=wb.Sheets[rpSheetNames[ri0]];break;}}
+        if(rpWS){
+          var rprow=XLSX.utils.sheet_to_json(rpWS,{header:1,defval:null,raw:true});
+          if(!Array.isArray(appData.recurringPlans))appData.recurringPlans=[];
+          if(rprow&&rprow.length>1){
+            var rh=rprow[0]||[],rc={};
+            rh.forEach(function(h,ci){var k=String(h||'').trim();
+              if(k==='编号')rc.id=ci;
+              else if(k==='名称')rc.name=ci;
+              else if(k==='分类ID')rc.cid=ci;
+              else if(k.indexOf('分类名')>=0)rc.cname=ci;
+              else if(k.indexOf('计划内容')>=0||k==='内容')rc.text=ci;
+              else if(k.indexOf('开始时间')>=0)rc.start=ci;
+              else if(k.indexOf('结束时间')>=0)rc.end=ci;
+              else if(k.indexOf('规则')>=0)rc.rule=ci;
+              else if(k.indexOf('备注')>=0)rc.note=ci;});
+            if(rc.rule==null){console.warn('[导入]周期计划表缺少规则列，跳过');}
+            else{
+              for(var rr=1;rr<rprow.length;rr++){
+                var row=rprow[rr];if(!row)continue;
+                var ruleObj=null;
+                try{ruleObj=JSON.parse(String(_safeGet(row,rc.rule)||''));}catch(_){ruleObj=null;}
+                if(!ruleObj||!ruleObj.type)continue;
+                var rcid=String(_safeGet(row,rc.cid)||'').trim();
+                var rcn=rc.cname!=null?String(_safeGet(row,rc.cname)||'').trim():'';
+                if(!rcid&&rcn)rcid=cn2id[rcn]||cidMap[rcn]||'other';
+                if(!rcid)rcid='other';
+                var rid=_safeGet(row,rc.id)?String(_safeGet(row,rc.id)):genId();
+                var rtext=rc.text!=null?String(_safeGet(row,rc.text)||'').trim():'';
+                var rname=rc.name!=null?String(_safeGet(row,rc.name)||'').trim():'';
+                var rDup=appData.recurringPlans.some(function(y){
+                  try{return y&&String(y.id)===rid;}catch(_){return false;}
+                })||appData.recurringPlans.some(function(y){
+                  try{return y&&String(y.categoryId)===rcid&&String(y.text||'')===rtext&&String(y.startTime||'')===String(_safeGet(row,rc.start)||'')&&JSON.stringify(y.rule||null)===JSON.stringify(ruleObj);}catch(_){return false;}
+                });
+                if(rDup)continue;
+                var item={id:rid,name:rname,text:rtext,categoryId:rcid,
+                  startTime:String(_safeGet(row,rc.start)||'').trim(),
+                  endTime:String(_safeGet(row,rc.end)||'').trim(),rule:ruleObj};
+                if(rc.note!=null){var ntv=String(_safeGet(row,rc.note)||'').trim();if(ntv)item.note=ntv;}
+                appData.recurringPlans.push(item);newRP++;
+              }
+            }
+          }
+        }
+      }catch(_rperr){console.error('[导入]周期计划解析异常',_rperr);}
 
       /* ========== Sheet3: 待办数据 ========== */
       var todoSheetNames=['✅ 待办数据','待办数据','todos','待办'];
@@ -4489,6 +4582,7 @@ function _impExcel(f){
       var parts=[];
       if(newRec>0||dupRec>0)parts.push('记录'+newRec+'条'+(dupRec>0?'（跳过重复'+dupRec+'）':''));
       if(newPlan>0||dupPlan>0)parts.push('计划'+newPlan+'条'+(dupPlan>0?'（跳过重复'+dupPlan+'）':''));
+      if(newRP>0)parts.push('周期计划'+newRP+'条');
       if(newTodo>0||dupTodo>0)parts.push('待办'+newTodo+'条'+(dupTodo>0?'（跳过重复'+dupTodo+'）':''));
       if(parts.length===0){_forceToast('没有新增数据（全部已存在）');}
       else{_forceToast('导入完成：'+parts.join('，'));}
@@ -4500,10 +4594,12 @@ function _impExcel(f){
 }
 
 /* 导入JSON（全量备份）*/
+/* 完整复制对象，避免导入时丢掉 subtype/note/done/rule 等扩展字段 */
+function _cpObj(o){var r={};try{Object.keys(o).forEach(function(k){r[k]=o[k];});}catch(_){}return r;}
 function _impJson(f){
   var r=new FileReader();
   r.onload=function(e){
-    var newRec=0,dupRec=0,newPlan=0,newTodo=0;
+    var newRec=0,dupRec=0,newPlan=0,newTodo=0,newRP=0;
     var errMsg='';
     try{
       var d;
@@ -4585,7 +4681,8 @@ function _impJson(f){
                 var _pk=String(p.categoryId)+'|'+String(p.startTime||'')+'|'+String((p.text||'').trim());
                 if(eKeys.has(_pk))return; /* 跨格式导入防重：同分类+同开始时间+同内容视为重复 */
                 /* 深拷贝避免引用问题 */
-                appData.plans[date].push({id:p.id,categoryId:p.categoryId,text:p.text||'',startTime:p.startTime||'',endTime:p.endTime||''});
+                var _pc=_cpObj(p);_pc.id=p.id;_pc.categoryId=p.categoryId;_pc.text=p.text||'';_pc.startTime=p.startTime||'';_pc.endTime=p.endTime||'';
+                appData.plans[date].push(_pc);
                 eIds.add(p.id);eKeys.add(_pk);newPlan++;
               }catch(_){}
             });
@@ -4615,13 +4712,36 @@ function _impJson(f){
                 var _tk=String((t.text||'').trim());
                 if(_tk&&eKeys.has(_tk))return; /* 跨格式导入防重：同日同内容视为重复 */
                 /* 深拷贝避免引用问题 */
-                appData.todos[date].push({id:t.id,text:t.text||'',note:t.note||'',done:!!t.done});
+                var _tc=_cpObj(t);_tc.text=t.text||'';_tc.note=t.note||'';_tc.done=!!t.done;
+                appData.todos[date].push(_tc);
                 eIds.add(t.id);if(_tk)eKeys.add(_tk);newTodo++;
               }catch(_){}
             });
           }catch(_){}
         });
       }
+      /* 合并周期计划（此前整块丢失，导致计划页「计划」侧数据不全） */
+      if(Array.isArray(d.recurringPlans)){
+        if(!Array.isArray(appData.recurringPlans))appData.recurringPlans=[];
+        var rpIds=new Set(),rpKeys=new Set();
+        appData.recurringPlans.forEach(function(rp){
+          try{
+            if(rp&&rp.id)rpIds.add(rp.id);
+            if(rp)rpKeys.add(String(rp.categoryId||'')+'|'+String(rp.text||rp.name||'').trim()+'|'+String(rp.startTime||'')+'|'+JSON.stringify(rp.rule||null));
+          }catch(_){}
+        });
+        d.recurringPlans.forEach(function(rp){
+          try{
+            if(!rp||(typeof rp!=='object')||!rp.rule)return;
+            if(rp.id&&rpIds.has(rp.id))return;
+            var _rk=String(rp.categoryId||'')+'|'+String(rp.text||rp.name||'').trim()+'|'+String(rp.startTime||'')+'|'+JSON.stringify(rp.rule||null);
+            if(rpKeys.has(_rk))return;
+            appData.recurringPlans.push(_cpObj(rp));
+            rpIds.add(rp.id);rpKeys.add(_rk);newRP++;
+          }catch(_){}
+        });
+      }
+      /* 说明：quickNotes（自定义常用备注）为已废弃字段，载入时统一清空，不参与导入 */
       /* 保存 */
       try{ saveData(); }catch(se){ console.error('saveData错误:',se); errMsg='（保存警告：'+(se.message||se)+'）'; }
       console.log('[导入] 合并完成 newRec=',newRec,'dupRec=',dupRec,'newPlan=',newPlan,'newTodo=',newTodo);
@@ -4639,6 +4759,7 @@ function _impJson(f){
       if(dupRec>0)parts.push('跳过重复'+dupRec+'条');
       if(newPlan>0)parts.push('新增'+newPlan+'条计划');
       if(newTodo>0)parts.push('新增'+newTodo+'条待办');
+      if(newRP>0)parts.push('新增'+newRP+'条周期计划');
       if(parts.length===0)parts.push('无新增数据');
       finalMsg='导入完成：'+parts.join('，')+errMsg;
     }catch(_){ finalMsg='导入完成'; }
@@ -9130,8 +9251,9 @@ setTimeout(_rebindModalBtns,800);
       /* 只给"看得见的白色导航条 + 安全区"让位，导航条上方的透明渐隐区不占高 */
       var inner=$('tabBarInner'), vh=window.innerHeight||document.documentElement.clientHeight||740;
       var barH=0;
-      if(inner){var ir=inner.getBoundingClientRect(); if(ir.height>0&&ir.top>0){barH=Math.round(vh-ir.top);}}
-      if(!barH&&root){var rr=root.getBoundingClientRect(); if(rr.height>0){barH=Math.round(rr.height)-22;}}
+      /* 底部导航已是占满底部的实心面板：按面板顶边让位 */
+      if(root){var rr0=root.getBoundingClientRect(); if(rr0.height>0&&rr0.top>0){barH=Math.round(vh-rr0.top);}}
+      if(!barH&&inner){var ir=inner.getBoundingClientRect(); if(ir.height>0&&ir.top>0){barH=Math.round(vh-ir.top);}}
       if(!barH){barH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap-barh'),10)||70;}
       document.documentElement.style.setProperty('--gap-barh',barH+'px');
       var top=card.getBoundingClientRect().top;
@@ -9213,7 +9335,16 @@ setTimeout(_rebindModalBtns,800);
     var td=new Date(); td.setHours(0,0,0,0);
     var inCur=(td>=ws&&td<=we);
     var rng=$('gwRange'); if(rng)rng.textContent=cn(ws)+' - '+cn(we);
-    var pill=$('gwThisBtn'); if(pill){ if(inCur){pill.classList.add('cur');}else{pill.classList.remove('cur');} }
+    /* 相对本周的偏移：0本周 / -1上周 / +1下周 / -2两周前→「2周前」 / +2→「2周后」 */
+    var tw=weekStart(td); var off=Math.round((ws.getTime()-tw.getTime())/(7*86400000));
+    var txt,cls;
+    if(off===0){txt='本周';cls='cur';}
+    else if(off===-1){txt='上周';cls='past';}
+    else if(off===1){txt='下周';cls='next';}
+    else if(off<0){txt=(-off)+'周前';cls='past';}
+    else{txt=off+'周后';cls='next';}
+    var pill=$('gwThisBtn');
+    if(pill){ pill.textContent=txt; pill.className='gw-pill '+cls; pill.title=inCur?'回到本周':'点击回到本周'; }
     badge();
     var key=iso(ws)+'|'+iso(d)+'|'+iso(td);
     if(!force&&key===lastKey)return;
