@@ -3,7 +3,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#fcfaf6">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -123,8 +122,8 @@ body{background:#fcfaf6;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlig
 .tab-content{display:none;animation:fadeIn 0.3s;pointer-events:auto;padding-bottom:72px;}
 /* ===== [桌面图标/standalone] 顶部安全区：内容不再钻进状态栏/灵动岛的半透明区域（那层"雾"就是它） ===== */
 @media all and (display-mode: standalone){
-  body{padding-top:env(safe-area-inset-top,0px)!important;}
-  body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#fcfaf6;z-index:99999;pointer-events:none;}
+  body{padding-top:calc(env(safe-area-inset-top,0px) + 1px)!important;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#ffffff;z-index:99999;pointer-events:none;}
 }
 
 .tab-content.active{display:block;}
