@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#fcfaf6">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>⌛ Timelog</title>
 <meta name="apple-mobile-web-app-title" content="Timelog">
 <meta name="application-name" content="Timelog">
@@ -118,6 +121,12 @@ body{background:#fcfaf6;margin:0;padding:0;overflow-x:hidden;-webkit-tap-highlig
 /* 页面背景：顶部纯白渐变到底部淡绿，固定层不随滚动位移 */
 .glass-card{background:#ffffff;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid rgba(120,110,90,0.13);}
 .tab-content{display:none;animation:fadeIn 0.3s;pointer-events:auto;padding-bottom:72px;}
+/* ===== [桌面图标/standalone] 顶部安全区：内容不再钻进状态栏/灵动岛的半透明区域（那层"雾"就是它） ===== */
+@media all and (display-mode: standalone){
+  body{padding-top:env(safe-area-inset-top,0px)!important;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:#fcfaf6;z-index:99999;pointer-events:none;}
+}
+
 .tab-content.active{display:block;}
 #gap.tab-content.active{display:flex;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -156,7 +165,7 @@ button:active{transform:scale(0.97);}
 .gap-actual-column{left:calc(50px + (100% - 50px)/2);}
 
 .gap-block{position:absolute;left:4px;right:4px;border-radius:10px;padding:4px 8px;font-size:11px; /* 统一辅助小字 */cursor:pointer;overflow:hidden;z-index:30;pointer-events:auto;-webkit-tap-highlight-color:rgba(54,184,164,0.15);touch-action:manipulation;box-shadow:0 2px 6px rgba(0,0,0,0.08);border:1.5px dashed rgba(0,0,0,0.15);}
-.timeline-container{position:relative;width:380%;height:130px;background:linear-gradient(to bottom,#f8fafc,#f1f5f9);overflow:visible;}
+.timeline-container{position:relative;width:380%;height:165px;background:linear-gradient(to bottom,#f8fafc,#f1f5f9);overflow:visible;}
 .timeline-container .timeline-hour{position:absolute;top:6px;font-size:10px;color:#94a3b8;font-weight:500;transform:translateX(-50%);}
 .timeline-container .timeline-block{position:absolute;height:80px;border-radius:10px;overflow:hidden;box-sizing:border-box;display:flex;align-items:center;justify-content:center;}
 .timeline-hour{position:absolute;top:0;bottom:0;width:1px;background:#e2e8f0;font-size:10px;color:#94a3b8;text-align:center;}
@@ -2000,7 +2009,7 @@ function renderTimeline(){
   var c=$('timelineContainer'),l=$('timelineLegend'),wrap=$('timelineWrapper');
   c.innerHTML='';l.innerHTML='';
   // 内容宽度设为240%（300%太宽），0点在最左、24点在最右；滚动由外层wrap负责
-  c.style.position='relative';c.style.width='380%';c.style.height='130px';
+  c.style.position='relative';c.style.width='380%';c.style.height='165px';
   // 画时间刻度（每1小时一格，间距更宽松）
   for(var i=0;i<=24;i+=1){
     var h=document.createElement('div');
@@ -2037,9 +2046,9 @@ function renderTimeline(){
     if(wp<=0)return;
     var b=document.createElement('div');
     b.className='timeline-block';
-    b.style.position='absolute';b.style.left=sp+'%';b.style.width=wp+'%';b.style.height='80px';
-    // 垂直居中：容器130px，块80px，top=(130-80)/2=25px
-    b.style.top='25px';b.style.bottom='auto';
+    b.style.position='absolute';b.style.left=sp+'%';b.style.width=wp+'%';b.style.height='100px';
+    // 容器165px：上方 48px 留给刻度与「现在」胶囊，色块从 48px 开始，互不遮挡
+    b.style.top='48px';b.style.bottom='auto';
     b.style.borderRadius='10px';b.style.overflow='hidden';b.style.cursor='pointer';
     b.style.boxSizing='border-box';b.style.display='flex';b.style.alignItems='center';b.style.justifyContent='center';
     var bColor=cat.color;var bIcon=cat.icon;var bName=cat.name;
